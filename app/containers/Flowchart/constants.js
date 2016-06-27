@@ -1,0 +1,11 @@
+/*
+ *
+ * Flowchart constants
+ *
+ */
+
+export const LOAD_FLOWCHARTS = 'LOAD_FLOWCHARTS';
+export const LOADED_FLOWCHARTS = 'LOADED_FLOWCHARTS';
+export const LOAD_FLOWCHART_NODE = 'LOAD_FLOWCHART_NODE';
+export const LOADED_FLOWCHART_NODE = 'LOADED_FLOWCHART_NODE';
+export const LOADING_ERROR = 'LOADING_ERROR';
