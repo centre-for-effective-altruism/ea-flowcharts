@@ -1,0 +1,10 @@
+.loading {
+	display: flex;
+	align-items: center;
+	height: 50vh;
+	justify-content: center;
+}
+.loadingText {
+	color: #EEE;
+	font-size: 50px;
+}

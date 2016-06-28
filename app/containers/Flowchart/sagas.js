@@ -1,4 +1,4 @@
-import { delay } from 'redux-saga';
+import { takeLatest, delay } from 'redux-saga';
 import { take, call, put, fork, cancel } from 'redux-saga/effects';
 
 // constants
@@ -16,7 +16,6 @@ import contentful from 'api/contentful'
 
 // Individual exports for testing
 export function* getFlowcharts() {
-	console.log('Called getFlowcharts()');
 	let entries = yield contentful.getEntries({
 		'content_type': 'flowchart'
 	})
@@ -26,10 +25,9 @@ export function* getFlowcharts() {
 		yield put( loadedFlowcharts(entries.items) )
 	}
 }
-export function* getFlowchartNode(nodeId) {
-	console.log('Called getFlowchartNode()');
+export function* getFlowchartNode(action) {
 	let entries = yield contentful.getEntries({
-		'sys.id': nodeId
+		'sys.id': action.nodeId
 	})
 	if(entries.errors){
 		yield put( loadingError(entries.errors) )
@@ -40,15 +38,10 @@ export function* getFlowchartNode(nodeId) {
 
 // Watch
 export function* getFlowchartsWatcher() {
-  while (yield take(LOAD_FLOWCHARTS)) {
-    yield call(getFlowcharts);
-  }
-
-  while (nodeId = yield take(LOAD_FLOWCHART_NODE)) {
-
-  	console.log('nodeId',nodeId);
-    yield call(getFlowchartNode);
-  }
+	yield [
+		takeLatest(LOAD_FLOWCHARTS,getFlowcharts),
+		takeLatest(LOAD_FLOWCHART_NODE,getFlowchartNode)
+	];
 }
 
 // Main function

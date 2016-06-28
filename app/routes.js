@@ -22,7 +22,7 @@ export default function createRoutes(store) {
       indexRoute: { onEnter: (nextState, replace) => replace('/flowchart') }
     },
     {
-      path: '/flowchart(/:nodeId)',
+      path: '/flowchart(/:flowchartId)(/:nodeId)',
       name: 'flowchart',
       getComponent(nextState, cb) {
         const importModules = Promise.all([

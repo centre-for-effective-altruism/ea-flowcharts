@@ -7,91 +7,148 @@
  import React from 'react';
  // state handling
  import { connect } from 'react-redux';
- import {selectLoading,selectFlowcharts} from './selectors';
- import { createStructuredSelector } from 'reselect';
- import { loadFlowcharts,loadFlowchartNode } from './actions';
+ import { push } from 'react-router-redux';
+ import {
+    selectLoading,
+    selectFlowcharts,
+    selectCurrentFlowchart,
+    selectCurrentFlowchartNode,
+    selectPreviousFlowchartNode
+} from './selectors';
+import { createStructuredSelector } from 'reselect';
+import { loadFlowcharts,loadFlowchartNode,setCurrentFlowchart } from './actions';
 // components
- import {Link} from 'react-router';
- import {Grid,Row,Col,Button} from 'react-bootstrap';
- import styles from './styles.css';
+import {Link} from 'react-router';
+import {Grid,Row,Col,Button} from 'react-bootstrap';
+import Header from 'components/Header';
+import Loading from 'components/Loading';
+import FlowchartList from 'components/FlowchartList';
+import FlowchartItem from 'components/FlowchartItem';
+
+import styles from './styles.css';
+import {contentfulObjShape} from 'api/contentful';
+
 
 export class Flowchart extends React.Component { // eslint-disable-line react/prefer-stateless-function
     
     constructor(props){
         super(props);
         // bind functions
-        this.listFlowcharts = this.listFlowcharts.bind(this);
+    }
+
+    static propTypes = {
+        // "history",
+        // "location",
+        // "params",
+        // "route",
+        // "routeParams",
+        // "routes",
+        // "children",
+        // "loading",
+        // "dispatch"
+        "flowcharts": React.PropTypes.oneOfType([
+            React.PropTypes.bool,
+            React.PropTypes.arrayOf(React.PropTypes.shape(contentfulObjShape))
+        ]),
+        "currentFlowchart": React.PropTypes.oneOfType([
+            React.PropTypes.bool,
+            React.PropTypes.shape(contentfulObjShape)
+        ]),
+        "currentNode": React.PropTypes.oneOfType([
+            React.PropTypes.bool,
+            React.PropTypes.shape(contentfulObjShape)
+        ]),
+    }
+
+    loadContent(prevProps){
+        // wait for any current loading to finish before moving on
+        if(this.props.loading){
+            return;
+        }
+
+        // if we don't have any flowcharts loaded, we need them, so load them...
+        if(!this.props.flowcharts){
+            this.props.dispatch(loadFlowcharts());
+        }
+
+        // we've got flowcharts and a flowchart ID but we haven't set one in the State...
+        if(this.props.flowcharts && this.props.params.flowchartId && !this.props.currentFlowchart){
+            let targetId = this.props.params.flowchartId
+            let currentFlowchart = this.props.flowcharts.find(function(flowchart){
+                return flowchart.sys.id === targetId;
+            })
+            if(currentFlowchart){
+                this.props.dispatch(setCurrentFlowchart(currentFlowchart));
+            } else {
+                this.props.dispatch(push('/flowchart'));
+            }
+        }
+
+        // we've got a flowchart set in state, but we don't have a URL var — unset the state var
+        if(!this.props.params.flowchartId && this.props.currentFlowchart){
+            this.props.dispatch(setCurrentFlowchart(false));
+        }
+
+        // we've got a current flowchart, but 
+        if(this.props.currentFlowchart && this.props.params.flowchartId && !this.props.params.nodeId){
+            this.props.dispatch(push('/'+[
+                'flowchart',
+                this.props.currentFlowchart.sys.id,
+                this.props.currentFlowchart.sys.id
+            ].join('/')))
+        }
+
+        if(this.props.params.nodeId) {
+            let currentId = this.props.currentNode ? this.props.currentNode.sys.id : false
+            let newId = this.props.params.nodeId
+            if(currentId !== newId){
+                this.props.dispatch(loadFlowchartNode(newId));
+            }
+        }
     }
 
     componentWillMount(){
-        if(!this.props.params.nodeId){
-            this.props.dispatch(loadFlowcharts());
-        } else {
-            this.props.dispatch(loadFlowchartNode(this.props.params.nodeId));
-        }
+        this.loadContent();
+    }
+
+    componentDidUpdate(prevProps){
+        this.loadContent(prevProps);
+        
     }
     
-    listFlowcharts(){
-        if(this.props.flowcharts && this.props.flowcharts.length > 0){
-            return (
-                <Row>
-                    <Col xs={12}>
-                        <ul>
-                        {this.props.flowcharts.map(function(flowchart){
-                            return (
-                                <li key={flowchart.sys.id}>
-                                    <Link to={'/flowchart/'+flowchart.sys.id}>{flowchart.fields.title}</Link>
-                                </li>
-                            )
-                        })}
-                        </ul>
-                    </Col>
-                </Row>
-            )
-        } else {
-            return (
-                <Row>
-                    <Col xs={12}>
-                        <em>No flowcharts loaded yet...</em>
-                    </Col>
-                </Row>
-            )
-        }
+
+
+    displayCurrentNode(node){
+        console.log('Node',this.props.currentNode);
+        
+
     }
 
     mainContent(){
-        if(this.props.params.nodeId){
-            console.log('Displaying current node');
-            if(this.props.currentNode){
-                return this.displayCurrentNode(this.props.currentNode)
-            } else {
-                return <p>No current node...</p>
-            }
+        if(this.props.loading){
+            return <Loading key={'loading'} />
         } else {
-            console.log('Displaying all flowcharts');
-            return this.listFlowcharts();
+            if(this.props.currentFlowchart && this.props.currentNode){
+                return <FlowchartItem key={this.props.currentFlowchart.sys.id} {...this.props} />
+            } else if(this.props.flowcharts) {
+                return <FlowchartList key={'flowchart-list'} flowcharts={this.props.flowcharts} />
+            } else {
+                return <p>Error loading flowcharts...</p>
+            }
+            
         }
     }
 
-    displayCurrentNode(node){
-        return (
-            <p>The current node is {node}</p>
-        )
-    }
-
-
     render() {
         return (
-              <div className={styles.flowchart}>
+            <div>
+                <Header />
                 <Grid>
-                    <Row>
-                        <Col xs={12}>
-                            <p>Loading: {this.props.loading ? 'true':'false'}</p>
-                        </Col>
-                    </Row>
-                    {this.mainContent()}
+                    <div className={styles.flowchart}>
+                        {this.mainContent()}
+                    </div>
                 </Grid>
-              </div>
+            </div>
           );
     }
 }
@@ -104,7 +161,9 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   loading: selectLoading(),
-  flowcharts: selectFlowcharts()
+  flowcharts: selectFlowcharts(),
+  currentFlowchart: selectCurrentFlowchart(),
+  currentNode: selectCurrentFlowchartNode(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Flowchart);

@@ -1,0 +1,12 @@
+@value primaryColor, highlightColor, lolightColor from 'containers/App/styles.css';
+
+.flowchartNavigation {
+
+}
+.flowchartNavigationToolbar {
+    display: inline-block;
+    float: right;
+}
+.flowchartNavigationHomeButton {
+	composes: primaryButton from 'containers/App/styles.css';
+}

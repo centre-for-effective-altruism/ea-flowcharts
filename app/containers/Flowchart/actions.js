@@ -7,6 +7,7 @@
 import {
   LOAD_FLOWCHARTS,
   LOADED_FLOWCHARTS,
+  SET_CURRENT_FLOWCHART,
   LOAD_FLOWCHART_NODE,
   LOADED_FLOWCHART_NODE,
   LOADING_ERROR
@@ -27,15 +28,20 @@ export function loadedFlowcharts(flowcharts) {
 	};
 }
 
+export function setCurrentFlowchart(flowchart) {
+  return {
+      type: SET_CURRENT_FLOWCHART,
+      flowchart
+  };
+}
+
 export function loadFlowchartNode(nodeId) {
-  console.log('Load requested for node ID',nodeId)
   return {
       type: LOAD_FLOWCHART_NODE,
       nodeId
   };
 }
 export function loadedFlowchartNode(node) {
-  console.log('loaded',node)
   return {
       type: LOADED_FLOWCHART_NODE,
       node

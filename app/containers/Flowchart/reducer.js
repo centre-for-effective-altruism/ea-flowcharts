@@ -8,6 +8,7 @@ import { fromJS } from 'immutable';
 import {
   LOAD_FLOWCHARTS,
   LOADED_FLOWCHARTS,
+  SET_CURRENT_FLOWCHART,
   LOAD_FLOWCHART_NODE,
   LOADED_FLOWCHART_NODE,
   LOADING_ERROR
@@ -16,7 +17,8 @@ import {
 const initialState = fromJS({
 	loading: false,
 	flowcharts: false,
-	currentNode: false
+	currentNode: false,
+	currentFlowchart: false
 });
 
 function flowchartReducer(state = initialState, action) {
@@ -28,6 +30,9 @@ function flowchartReducer(state = initialState, action) {
       return state
       .set('loading',false)
       .set('flowcharts',action.flowcharts)
+    case SET_CURRENT_FLOWCHART:
+      return state
+      .set('currentFlowchart',action.flowchart)
     case LOAD_FLOWCHART_NODE:
       return state
       .set('loading',true)

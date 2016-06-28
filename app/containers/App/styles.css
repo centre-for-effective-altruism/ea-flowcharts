@@ -1,0 +1,14 @@
+@value primaryColor:   #0C869B;
+@value highlightColor: #00B2BE;
+@value lolightColor:   #1B5266;
+
+.primaryButton {
+	background-color: primaryColor;
+	color:#FFF;
+	border-color:lolightColor;
+}
+.primaryButton:hover {
+	background-color: lolightColor;
+	border-color: #333;
+	color:#FFF;
+}
