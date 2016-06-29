@@ -9,7 +9,7 @@ import React from 'react';
 import styles from './styles.css';
 import itemStyles from '../FlowchartItem/styles.css';
 Object.assign(styles, itemStyles);
-import Markdown from 'components/Markdown';
+import Markdown from 'react-markdown';
 import { contentfulObjShape } from 'api/contentful';
 
 function FlowchartEndpoint(props) {
@@ -21,7 +21,7 @@ function FlowchartEndpoint(props) {
                     {props.node.fields.title}
                 </h3>
             </div>
-            <Markdown className={styles.flowchartItemExplanation} markdown={props.node.fields.explanation} />
+            <Markdown className={styles.flowchartItemExplanation} source={props.node.fields.explanation} />
         </div>
     );
 }

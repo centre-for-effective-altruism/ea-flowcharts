@@ -1,52 +1,57 @@
 @value primaryColor, highlightColor, lolightColor from 'containers/App/styles.css';
 
-.flowchartItem {
-
-}
-
 .flowchartItemEnter {
-	opacity: 0.01;
+    opacity: 0.01;
 }
+
 .flowchartItemActive {
-	opacity: 1;
+    opacity: 1;
 }
 
 .flowchartItemTitleWrapper {
-	background-color: primaryColor;
-	padding: 15px;
-	color: #FFF;
+    background-color: primaryColor;
+    padding: 15px;
+    color: #FFF;
 }
+
 .flowchartItemTitleWrapper small {
-	color:lolightColor;
+    color: lolightColor;
 }
+
 .flowchartItemTitle {
-	margin: 0;
+    margin: 0;
 }
+
 .flowchartItemExplanation {
-	padding: 15px;
-	font-size: 18px;
-	background: #EEE;
-	border-bottom: none;
+    padding: 15px;
+    font-size: 18px;
+    background: #EEE;
+    border-bottom: none;
 }
+
 .flowchartItemExplanation ul {
-	padding-left:30px;
+    padding-left: 30px;
 }
+
 .flowchartItemResponse {
-	text-align: center;
+    text-align: center;
 }
+
 .flowchartItemResponseButton {
-	color: primaryColor;
-	background-color: #EEE;
-	display: inline-block;
-	width: 100%;
-	font-size: 72px;
+    color: primaryColor;
+    background-color: #EEE;
+    display: inline-block;
+    width: 100%;
+    font-size: 72px;
 }
-.flowchartItemResponseButton:hover{
-	text-decoration: none;
-	background-color: #DDD;
-	color: highlightColor;
+
+.flowchartItemResponseButton:hover {
+    text-decoration: none;
+    background-color: #DDD;
+    color: highlightColor;
 }
+
 .flowchartItemResponseExplanation {
-	text-align: center;
-	background-color: #EEE;
+    text-align: center;
+    background-color: #EEE;
 }

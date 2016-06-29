@@ -5,8 +5,8 @@
 */
 
 import React from 'react';
-import LogoLightbulb from 'assets/logos/ea-logo-lightbulb.svg';
-import LogoText from 'assets/logos/ea-logo-text.svg';
+import LogoLightbulb from 'images/logos/ea-logo-lightbulb.svg';
+import LogoText from 'images/logos/ea-logo-text.svg';
 import { Grid, Row, Col } from 'react-bootstrap';
 
 import styles from './styles.css';
@@ -20,12 +20,12 @@ function Header() {
                         <Row>
                             <Col xs={2}>
                                 <div className={styles.headerContent}>
-                                    <img className={`img-responsive ${styles.headerLogoLightbulb}`} alt={'Effective Altruism Logo Lightbulb'} src={LogoLightbulb} />
+                                    <LogoLightbulb className={`img-responsive ${styles.headerLogoLightbulb}`} alt={'Effective Altruism Logo Lightbulb'} />
                                 </div>
                             </Col>
                             <Col xs={10}>
                                 <div className={styles.headerContent}>
-                                    <img className={`img-responsive ${styles.headerLogoText}`} alt={'Effective Altruism Logo'} src={LogoText} />
+                                    <LogoText className={`img-responsive ${styles.headerLogoText}`} alt={'Effective Altruism Logo'} />
                                 </div>
                             </Col>
                         </Row>

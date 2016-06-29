@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Link } from 'react-router';
-import Markdown from 'components/Markdown';
+import Markdown from 'react-markdown';
 
 import { Row, Col, Glyphicon } from 'react-bootstrap';
 
@@ -26,7 +26,7 @@ function FlowchartNode(props) {
             <div className={styles.flowchartItemTitleWrapper}>
                 <h3 className={styles.flowchartItemTitle}>Q: {node.fields.question}</h3>
             </div>
-            <Markdown className={styles.flowchartItemExplanation} markdown={node.fields.explanation} />
+            <Markdown className={styles.flowchartItemExplanation} source={node.fields.explanation} />
             <Row>
             {node.fields.nodeLinks.map(nodeLink => (
                 <Col key={nodeLink.sys.id} sm={c}>
@@ -38,7 +38,7 @@ function FlowchartNode(props) {
                             <h4 className={styles.flowchartItemResponseTitle}>{nodeLink.fields.response}</h4>
                             <Glyphicon glyph="arrow-down" className={styles.flowchartItemResponseButtonIcon} />
                         </Link>
-                        <Markdown className={styles.flowchartItemResponseExplanation} markdown={nodeLink.fields.explanation} />
+                        <Markdown className={styles.flowchartItemResponseExplanation} source={nodeLink.fields.explanation} />
                     </div>
                 </Col>
             ))}

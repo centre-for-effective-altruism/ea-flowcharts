@@ -11,14 +11,14 @@ import styles from './styles.css';
 {{/if}}
 
 function {{ properCase name }}() {
-  return (
-    {{#if wantCSS}}
-    <div className={{curly true}}styles.{{ camelCase name }}{{curly}}>
-    {{else}}
-    <div>
-    {{/if}}
-    </div>
-  );
+    return (
+        {{#if wantCSS}}
+        <div className={{curly true}}styles.{{ camelCase name }}{{curly}}>
+        {{else}}
+        <div>
+        {{/if}}
+        </div>
+    );
 }
 
 export default {{ properCase name }};

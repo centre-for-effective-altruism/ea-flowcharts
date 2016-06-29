@@ -1,4 +1,4 @@
-import {
+/* import {
   selectFlowchart,
 } from '../selectors';
 import { fromJS } from 'immutable';
@@ -9,3 +9,4 @@ const selector = selectFlowchart();
 describe('selectFlowchart', () => {
 
 });
+*/

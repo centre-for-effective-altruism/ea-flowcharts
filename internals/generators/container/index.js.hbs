@@ -14,17 +14,17 @@ import styles from './styles.css';
 {{/if}}
 
 export class {{ properCase name }} extends React.Component { // eslint-disable-line react/prefer-stateless-function
-  render() {
-    return (
-      {{#if wantCSS}}
-      <div className={{curly true}}styles.{{ camelCase name }}{{curly}}>
-      {{else}}
-      <div>
-      {{/if}}
-      This is {{properCase name}} container !
-      </div>
-    );
-  }
+    render() {
+        return (
+            {{#if wantCSS}}
+            <div className={{curly true}}styles.{{ camelCase name }}{{curly}}>
+            {{else}}
+            <div>
+            {{/if}}
+            This is {{properCase name}} container !
+            </div>
+        );
+    }
 }
 
 {{#if wantActionsAndReducer}}
@@ -32,9 +32,9 @@ const mapStateToProps = select{{properCase name}}();
 {{/if}}
 
 function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
+    return {
+        dispatch,
+    };
 }
 
 {{#if wantActionsAndReducer}}

@@ -3,7 +3,6 @@
  * Flowchart constants
  *
  */
-
 export const LOAD_FLOWCHARTS = 'LOAD_FLOWCHARTS';
 export const LOADED_FLOWCHARTS = 'LOADED_FLOWCHARTS';
 export const SET_CURRENT_FLOWCHART = 'SET_CURRENT_FLOWCHART';

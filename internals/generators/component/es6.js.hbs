@@ -11,16 +11,16 @@ import styles from './styles.css';
 {{/if}}
 
 class {{ properCase name }} extends React.Component {
-  render() {
-    return (
-      {{#if wantCSS}}
-      <div className={{curly true}}styles.{{ camelCase name }}{{curly}}>
-      {{else}}
-      <div>
-      {{/if}}
-      </div>
-    );
-  }
+    render() {
+        return (
+            {{#if wantCSS}}
+            <div className={{curly true}}styles.{{ camelCase name }}{{curly}}>
+            {{else}}
+            <div>
+            {{/if}}
+            </div>
+        );
+    }
 }
 
 export default {{ properCase name }};

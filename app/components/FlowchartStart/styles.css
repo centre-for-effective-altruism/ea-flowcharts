@@ -1,16 +1,14 @@
-.flowchartStart {
-
-}
 .flowchartStartDescription {
-	font-size: 26px;
-	font-style: italic;
+    font-size: 26px;
+    font-style: italic;
 }
 
 .flowchartStartDescription em {
-	font-style: normal;
+    font-style: normal;
 }
-.flowchartStartButton{
-	composes: primaryButton from 'containers/App/styles.css';
-	font-size: 30px;
-	display: block;
+
+.flowchartStartButton {
+    composes: primaryButton from 'containers/App/styles.css';
+    font-size: 30px;
+    display: block;
 }

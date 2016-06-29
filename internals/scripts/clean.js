@@ -4,18 +4,18 @@ require('shelljs/global');
  * Adds mark check symbol
  */
 function addCheckMark(callback) {
-  process.stdout.write(' ✓');
-  callback();
+    process.stdout.write(' ✓');
+    callback();
 }
 
 if (!which('git')) {
-  echo('Sorry, this script requires git');
-  exit(1);
+    echo('Sorry, this script requires git');
+    exit(1);
 }
 
 if (!test('-e', 'internals/templates')) {
-  echo('The example is deleted already.');
-  exit(1);
+    echo('The example is deleted already.');
+    exit(1);
 }
 
 process.stdout.write('Cleanup started...');
@@ -35,18 +35,18 @@ cp('internals/templates/homePage.js', 'app/containers/HomePage/index.js');
 // Copy selectors
 mkdir('app/containers/App/tests');
 cp('internals/templates/selectors.js',
-  'app/containers/App/selectors.js');
+    'app/containers/App/selectors.js');
 cp('internals/templates/selectors.test.js',
-  'app/containers/App/tests/selectors.test.js');
+    'app/containers/App/tests/selectors.test.js');
 
 // Utils
 rm('-rf', 'app/utils');
 mkdir('app/utils');
 mkdir('app/utils/tests');
 cp('internals/templates/hooks.js',
-  'app/utils/hooks.js');
+    'app/utils/hooks.js');
 cp('internals/templates/hooks.test.js',
-  'app/utils/tests/hooks.test.js');
+    'app/utils/tests/hooks.test.js');
 
 // Replace the files in the root app/ folder
 cp('internals/templates/app.js', 'app/app.js');
@@ -63,8 +63,8 @@ process.stdout.write(' ✓');
 
 // Commit the changes
 if (exec('git add . --all && git commit -qm "Remove default example"').code !== 0) {
-  echo('\nError: Git commit failed');
-  exit(1);
+    echo('\nError: Git commit failed');
+    exit(1);
 }
 
 echo('\nCleanup done. Happy Coding!!!');

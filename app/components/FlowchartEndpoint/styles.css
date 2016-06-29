@@ -1,3 +1,5 @@
+@value primaryColor, highlightColor, lolightColor from 'containers/App/styles.css';
+
 .flowchartEndpoint {
-	border-bottom: 2px solid #333;
+    border-bottom: 2px solid primaryColor;
 }

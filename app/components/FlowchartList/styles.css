@@ -1,6 +1,3 @@
-.flowchartList {
-
-}
 .flowchartListButton {
-	composes: primaryButton from 'containers/App/styles.css';
+    composes: primaryButton from 'containers/App/styles.css';
 }
