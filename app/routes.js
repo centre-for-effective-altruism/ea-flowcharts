@@ -42,14 +42,14 @@ export default function createRoutes(store) {
                 importModules.catch(errorLoading);
             },
         },
-        // {
-        //     path: '/map',
-        //     getComponent(location, cb) {
-        //         System.import('containers/FlowchartMap')
-        //             .then(loadModule(cb))
-        //             .catch(errorLoading);
-        //     },
-        // },
+        {
+            path: '/map',
+            getComponent(location, cb) {
+                System.import('containers/FlowchartMap')
+                    .then(loadModule(cb))
+                    .catch(errorLoading);
+            },
+        },
         {
             path: '*',
 

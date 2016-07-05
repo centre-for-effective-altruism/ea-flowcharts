@@ -48,10 +48,11 @@ export function clearPathway(entryId) {
     };
 }
 
-export function truncatePathwayToStep(entryId) {
+export function truncatePathwayToStep(entryId, extraSteps) {
     return {
         type: TRUNCATE_PATHWAY_TO_STEP,
         entryId,
+        extraSteps
     };
 }
 

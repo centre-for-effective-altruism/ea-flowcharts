@@ -1,10 +1,43 @@
+@value primaryColor, highlightColor, lolightColor from 'containers/App/styles.css';
+
 .nodeLink {
-	padding:15px;
-	background: #DDD;
+	padding:15px 0;
+	position: relative;
 }
+
 .nodeLinkResponseWrapper {
-	color: #999;
+	color: primaryColor;
 }
 .nodeLinkResponse {
 	margin: 0 0 5px;
+}
+.nodeLinkChangedMindWrapper {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	color: #FFF;
+	font-size: 20px;
+	display: none;
+	z-index: 1000;
+}
+.nodeLink:hover .nodeLinkChangedMindWrapper {
+	background-color: lolightColor;
+	display: block;
+	cursor: pointer;
+	opacity:0.9;
+}
+.nodeLinkChangedMind {
+	width: 100%;
+	height: 100%;
+	top:0;
+	bottom:0;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.nodeLinkChangedMindTitle {
+	font-size: 20px;
 }

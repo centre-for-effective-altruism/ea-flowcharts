@@ -22,30 +22,32 @@ function FlowchartNode(props) {
     const classes = [props.isLastPathwayNode ? styles.flowchartItemCurrentNode : styles.flowchartItemPreviousNode].join(' ');
     return (
         <section className={classes}>
-            <div className={styles.flowchartItemTitleWrapper} onClick={() => { if (!props.isLastPathwayNode) props.truncatePathwayToStep(node.sys.id); }}>
-                <h3 className={styles.flowchartItemTitle}>Q: {node.fields.question}</h3>
-            </div>
             {(() => {
                 if (props.isLastPathwayNode) {
                     return (
                         <div>
-                            <Markdown className={styles.flowchartItemExplanation} source={node.fields.explanation} />
-                            <Row>
-                            {node.fields.nodeLinks.map(nodeLink => (
-                                <Col key={nodeLink.sys.id} sm={c}>
-                                    <div className={styles.flowchartItemResponse}>
-                                        <Button
-                                          className={styles.flowchartItemResponseButton}
-                                          onClick={() => props.addStep(nodeLink.sys.id)}
-                                        >
-                                            <h4 className={styles.flowchartItemResponseTitle}>{nodeLink.fields.response}</h4>
-                                            <Glyphicon glyph="arrow-down" className={styles.flowchartItemResponseButtonIcon} />
-                                        </Button>
-                                        <Markdown className={styles.flowchartItemResponseExplanation} source={nodeLink.fields.explanation} />
-                                    </div>
-                                </Col>
-                            ))}
-                            </Row>
+                            <div className={styles.flowchartItemTitleWrapper}>
+                                <h3 className={styles.flowchartItemTitle}>Q: {node.fields.question}</h3>
+                            </div>
+                            <div>
+                                <Markdown className={styles.flowchartItemExplanation} source={node.fields.explanation} />
+                                <Row>
+                                {node.fields.nodeLinks.map(nodeLink => (
+                                    <Col key={nodeLink.sys.id} sm={c}>
+                                        <div className={styles.flowchartItemResponse}>
+                                            <Button
+                                              className={styles.flowchartItemResponseButton}
+                                              onClick={() => props.addStep(nodeLink.sys.id)}
+                                            >
+                                                <h4 className={styles.flowchartItemResponseTitle}>{nodeLink.fields.response}</h4>
+                                                <Glyphicon glyph="arrow-down" className={styles.flowchartItemResponseButtonIcon} />
+                                            </Button>
+                                            <Markdown className={styles.flowchartItemResponseExplanation} source={nodeLink.fields.explanation} />
+                                        </div>
+                                    </Col>
+                                ))}
+                                </Row>
+                            </div>
                         </div>
                     );
                 }

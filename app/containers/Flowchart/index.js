@@ -109,8 +109,8 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
         }
     }
 
-    truncatePathwayToStep(entryId) {
-        this.props.dispatch(truncatePathwayToStep(entryId));
+    truncatePathwayToStep(entryId, extraSteps = 0) {
+        this.props.dispatch(truncatePathwayToStep(entryId, extraSteps));
     }
 
     clearPathway() {

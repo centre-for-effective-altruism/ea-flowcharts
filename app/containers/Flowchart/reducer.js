@@ -63,7 +63,7 @@ function flowchartReducer(state = initialState, action) {
         // if we have an id, roll back to it
         if (typeof action.entryId === 'string') {
             return state
-            .set('pathway', state.get('pathway').slice(0, state.get('pathway').lastIndexOf(action.entryId) + 1));
+            .set('pathway', state.get('pathway').slice(0, state.get('pathway').lastIndexOf(action.entryId) + 1 - action.extraSteps));
         }
         // no ID, so go back one step — remove both the last question and the nodeLink
         return state

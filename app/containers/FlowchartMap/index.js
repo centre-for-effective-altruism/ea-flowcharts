@@ -8,8 +8,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styles from './styles.css';
 import ReactFauxDOM from 'react-faux-dom';
-// var Snap = require('snapsvg');
-
+import SnapLib from 'imports-loader?this=>window,fix=>module.exports=0!snapsvg/dist/snap.svg.js';
 
 
 export class FlowchartMap extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -18,28 +17,41 @@ export class FlowchartMap extends React.Component { // eslint-disable-line react
         children: React.PropTypes.node,
     };
 
+    constructor(props) {
+        super(props);
+        this.draw = this.draw.bind(this);
+    }
 
+    componentDidMount() {
+        this.draw();
+    }
 
-    getContent(){
-        // return <p>Hi there</p>;
-        // Create your element.
-        var el = ReactFauxDOM.createElement('div')
+    componentDidUpdate() {
+        this.draw();
+    }
 
-        // Change stuff using actual DOM functions.
-        // Even perform CSS selections.
-        el.style.setProperty('background-color', 'red')
-        el.style.setProperty('height', '400px')
-        el.setAttribute('class', 'box')
+    componentWillReceiveProps() {
+        this.draw();
+    }
 
-        // Render it to React elements.
-        return el.toReact()
+    draw() {
+        const paper = Snap();
+
+        const circle = paper.circle(150,150,100);
+        circle.attr({
+            fill: '#0F0'
+        });
+        const path = paper.path('M150,150l300,300');
+        path.attr({
+
+        });
+        
+        this.wrapper.appendChild(paper);
     }
 
     render() {
         return (
-            <div className={styles.flowchartMap}>
-                {this.getContent()}
-            </div>
+            <div className={styles.flowchartMap} ref={(ref) => this.wrapper = ref}></div>
         );
     }
 }
