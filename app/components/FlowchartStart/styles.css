@@ -11,4 +11,5 @@
     composes: primaryButton from 'containers/App/styles.css';
     font-size: 30px;
     display: block;
+    width: 100%;
 }

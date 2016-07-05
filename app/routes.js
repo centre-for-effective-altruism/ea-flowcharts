@@ -22,7 +22,7 @@ export default function createRoutes(store) {
             indexRoute: { onEnter: (nextState, replace) => replace('/flowchart') },
         },
         {
-            path: '/flowchart(/:flowchartId)(/:nodeId)',
+            path: '/flowchart(/:flowchartId)(/:pathway)',
             name: 'flowchart',
             getComponent(nextState, cb) {
                 const importModules = Promise.all([
@@ -41,8 +41,18 @@ export default function createRoutes(store) {
 
                 importModules.catch(errorLoading);
             },
-        }, {
+        },
+        // {
+        //     path: '/map',
+        //     getComponent(location, cb) {
+        //         System.import('containers/FlowchartMap')
+        //             .then(loadModule(cb))
+        //             .catch(errorLoading);
+        //     },
+        // },
+        {
             path: '*',
+
             name: 'notfound',
             getComponent(nextState, cb) {
                 System.import('containers/NotFoundPage')

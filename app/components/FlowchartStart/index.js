@@ -7,29 +7,37 @@
 import React from 'react';
 
 import Markdown from 'react-markdown';
-import { Link } from 'react-router';
-
+import { Button } from 'react-bootstrap';
 import styles from './styles.css';
 import { contentfulObjShape } from 'api/contentful';
 
 
 function FlowchartStart(props) {
     return (
-        <div className={styles.flowchartStart}>
+        <section className={styles.flowchartStart}>
             <Markdown className={styles.flowchartStartDescription} source={props.node.fields.description} />
-            <Link
-              className={`btn btn-default ${styles.flowchartStartButton}`}
-              to={`/flowchart/${props.currentFlowchart.sys.id}/${props.node.fields.nodeLink.fields.flowchartNode.sys.id}`}
-            >
-                {props.node.fields.nodeLink.fields.response}
-            </Link>
-        </div>
+            {(() => {
+                if (props.isLastPathwayNode) {
+                    return (
+                        <Button
+                          className={`btn btn-default ${styles.flowchartStartButton}`}
+                          onClick={() => props.addStep(props.node.fields.nodeLink.fields.flowchartNode.sys.id)}
+                        >
+                            {props.node.fields.nodeLink.fields.response}
+                        </Button>
+                    );
+                }
+                return null;
+            })()}
+        </section>
     );
 }
 
 FlowchartStart.propTypes = {
-    currentFlowchart: React.PropTypes.shape(contentfulObjShape),
+    currentFlowchart: React.PropTypes.string,
     node: React.PropTypes.shape(contentfulObjShape),
+    addStep: React.PropTypes.func,
+    isLastPathwayNode: React.PropTypes.bool,
 };
 
 export default FlowchartStart;

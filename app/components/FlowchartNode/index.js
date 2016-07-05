@@ -5,51 +5,59 @@
 */
 
 import React from 'react';
-import { Link } from 'react-router';
 import Markdown from 'react-markdown';
 
-import { Row, Col, Glyphicon } from 'react-bootstrap';
+import { Row, Col, Glyphicon, Button } from 'react-bootstrap';
 
 import styles from './styles.css';
-import itemStyles from '../FlowchartItem/styles.css';
-import { contentfulObjShape } from 'api/contentful';
-
-
+import itemStyles from '../FlowchartPathway/styles.css';
 Object.assign(styles, itemStyles);
+
+import { contentfulObjShape } from 'api/contentful';
 
 function FlowchartNode(props) {
     const node = props.node;
     let c = 12 / node.fields.nodeLinks.length;
     c = c >= 3 ? c : 3;
+    const classes = [props.isLastPathwayNode ? styles.flowchartItemCurrentNode : styles.flowchartItemPreviousNode].join(' ');
     return (
-        <div className={styles.flowchartNode}>
-            <div className={styles.flowchartItemTitleWrapper}>
+        <section className={classes}>
+            <div className={styles.flowchartItemTitleWrapper} onClick={() => { if (!props.isLastPathwayNode) props.truncatePathwayToStep(node.sys.id); }}>
                 <h3 className={styles.flowchartItemTitle}>Q: {node.fields.question}</h3>
             </div>
-            <Markdown className={styles.flowchartItemExplanation} source={node.fields.explanation} />
-            <Row>
-            {node.fields.nodeLinks.map(nodeLink => (
-                <Col key={nodeLink.sys.id} sm={c}>
-                    <div className={styles.flowchartItemResponse}>
-                        <Link
-                          className={styles.flowchartItemResponseButton}
-                          to={`/flowchart/${props.currentFlowchart.sys.id}/${nodeLink.fields.flowchartNode.sys.id}`}
-                        >
-                            <h4 className={styles.flowchartItemResponseTitle}>{nodeLink.fields.response}</h4>
-                            <Glyphicon glyph="arrow-down" className={styles.flowchartItemResponseButtonIcon} />
-                        </Link>
-                        <Markdown className={styles.flowchartItemResponseExplanation} source={nodeLink.fields.explanation} />
-                    </div>
-                </Col>
-            ))}
-            </Row>
-
-        </div>
+            {(() => {
+                if (props.isLastPathwayNode) {
+                    return (
+                        <div>
+                            <Markdown className={styles.flowchartItemExplanation} source={node.fields.explanation} />
+                            <Row>
+                            {node.fields.nodeLinks.map(nodeLink => (
+                                <Col key={nodeLink.sys.id} sm={c}>
+                                    <div className={styles.flowchartItemResponse}>
+                                        <Button
+                                          className={styles.flowchartItemResponseButton}
+                                          onClick={() => props.addStep(nodeLink.sys.id)}
+                                        >
+                                            <h4 className={styles.flowchartItemResponseTitle}>{nodeLink.fields.response}</h4>
+                                            <Glyphicon glyph="arrow-down" className={styles.flowchartItemResponseButtonIcon} />
+                                        </Button>
+                                        <Markdown className={styles.flowchartItemResponseExplanation} source={nodeLink.fields.explanation} />
+                                    </div>
+                                </Col>
+                            ))}
+                            </Row>
+                        </div>
+                    );
+                }
+                return null;
+            })()}
+        </section>
     );
 }
 FlowchartNode.propTypes = {
-    currentFlowchart: React.PropTypes.shape(contentfulObjShape),
     node: React.PropTypes.shape(contentfulObjShape),
+    isLastPathwayNode: React.PropTypes.bool,
+    addStep: React.PropTypes.func,
 };
 
 export default FlowchartNode;

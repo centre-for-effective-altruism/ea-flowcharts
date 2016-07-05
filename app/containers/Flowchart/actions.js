@@ -4,45 +4,54 @@
  *
  */
 import {
-  LOAD_FLOWCHARTS,
-  LOADED_FLOWCHARTS,
+  LOAD_ENTRIES,
+  LOADED_ENTRIES,
+  ADD_PATHWAY_STEP,
+  CLEAR_PATHWAY,
+  TRUNCATE_PATHWAY_TO_STEP,
   SET_CURRENT_FLOWCHART,
-  LOAD_FLOWCHART_NODE,
-  LOADED_FLOWCHART_NODE,
   LOADING_ERROR,
 } from './constants';
 
 
-export function loadFlowcharts() {
+export function loadEntries() {
     return {
-        type: LOAD_FLOWCHARTS,
+        type: LOAD_ENTRIES,
     };
 }
 
-export function loadedFlowcharts(flowcharts) {
+export function loadedEntries(entries) {
     return {
-        type: LOADED_FLOWCHARTS,
-        flowcharts,
+        type: LOADED_ENTRIES,
+        entries,
     };
 }
 
-export function setCurrentFlowchart(flowchart) {
+export function setCurrentFlowchart(flowchartId) {
     return {
         type: SET_CURRENT_FLOWCHART,
-        flowchart,
+        flowchartId,
     };
 }
 
-export function loadFlowchartNode(nodeId) {
+export function addPathwayStep(entryId) {
     return {
-        type: LOAD_FLOWCHART_NODE,
-        nodeId,
+        type: ADD_PATHWAY_STEP,
+        entryId,
     };
 }
-export function loadedFlowchartNode(node) {
+
+export function clearPathway(entryId) {
     return {
-        type: LOADED_FLOWCHART_NODE,
-        node,
+        type: CLEAR_PATHWAY,
+        entryId,
+    };
+}
+
+export function truncatePathwayToStep(entryId) {
+    return {
+        type: TRUNCATE_PATHWAY_TO_STEP,
+        entryId,
     };
 }
 

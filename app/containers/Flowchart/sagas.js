@@ -2,42 +2,31 @@ import { takeLatest } from 'redux-saga';
 import { take, put, fork, cancel } from 'redux-saga/effects';
 
 // constants
-import { LOAD_FLOWCHARTS, LOAD_FLOWCHART_NODE } from './constants';
+import { LOAD_ENTRIES } from './constants';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
 // actions
-import { loadedFlowcharts, loadedFlowchartNode, loadingError } from './actions';
+import { loadedEntries, loadingError } from './actions';
 import contentful from 'api/contentful';
 
 // All sagas to be loaded
 
 // Individual exports for testing
-export function* getFlowcharts() {
+export function* getEntries() {
     const entries = yield contentful.getEntries({
-        content_type: 'flowchart',
+        limit: 1000,
     });
     if (entries.errors) {
         yield put(loadingError(entries.errors));
     } else {
-        yield put(loadedFlowcharts(entries.items));
-    }
-}
-export function* getFlowchartNode(action) {
-    const entries = yield contentful.getEntries({
-        'sys.id': action.nodeId,
-    });
-    if (entries.errors) {
-        yield put(loadingError(entries.errors));
-    } else {
-        yield put(loadedFlowchartNode(entries.items[0]));
+        yield put(loadedEntries(entries.items));
     }
 }
 
 // Watch
 export function* getFlowchartsWatcher() {
     yield [
-        takeLatest(LOAD_FLOWCHARTS, getFlowcharts),
-        takeLatest(LOAD_FLOWCHART_NODE, getFlowchartNode),
+        takeLatest(LOAD_ENTRIES, getEntries),
     ];
 }
 

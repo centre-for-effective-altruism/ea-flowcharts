@@ -20,15 +20,12 @@ function FlowchartList(props) {
         <div className={styles.flowchartList}>
             <h3>Start by choosing a flowchart:</h3>
             <Row>
-            {props.flowcharts.map((flowchart) => {
-                let linkURI = `/${['flowchart', flowchart.sys.id, flowchart.sys.id].join('/')}`;
-                return (
-                    <Col key={flowchart.sys.id} sm={6}>
-                        <h4>{flowchart.fields.title}</h4>
-                        <Link className={linkClasses} to={linkURI}>Start this flowchart</Link>
-                    </Col>
-                );
-            })}
+            {props.flowcharts.map((flowchart) => (
+                <Col key={flowchart.sys.id} sm={6}>
+                    <h4>{flowchart.fields.title}</h4>
+                    <Link className={linkClasses} to={`/flowchart/${flowchart.sys.id}`}>Start this flowchart</Link>
+                </Col>
+            ))}
             </Row>
         </div>
     );

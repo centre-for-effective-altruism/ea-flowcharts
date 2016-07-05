@@ -12,6 +12,10 @@
  */
 
 import React from 'react';
+import Header from 'components/Header';
+import { Grid } from 'react-bootstrap';
+import styles from './styles.css';
+
 
 export default class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -22,7 +26,12 @@ export default class App extends React.Component { // eslint-disable-line react/
     render() {
         return (
             <div>
-                {this.props.children}
+                <Header />
+                <Grid>
+                    <div className={styles.mainContent}>
+                        {this.props.children}
+                    </div>
+                </Grid>
             </div>
         );
     }

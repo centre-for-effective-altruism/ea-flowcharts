@@ -7,7 +7,7 @@
 import React from 'react';
 
 import styles from './styles.css';
-import itemStyles from '../FlowchartItem/styles.css';
+import itemStyles from '../FlowchartPathway/styles.css';
 Object.assign(styles, itemStyles);
 import Markdown from 'react-markdown';
 import { contentfulObjShape } from 'api/contentful';

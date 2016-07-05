@@ -8,9 +8,29 @@
     opacity: 1;
 }
 
+.flowchartItemCurrentNode {
+
+}
+
+.flowchartItemPreviousNode {
+    /*opacity: 0.3;*/
+}
+
+
 .flowchartItemTitleWrapper {
     background-color: primaryColor;
     padding: 15px;
+    color: #FFF;
+}
+
+.flowchartItemPreviousNode .flowchartItemTitleWrapper {
+    background-color: #999;
+    color: #333;
+}
+
+.flowchartItemPreviousNode .flowchartItemTitleWrapper:hover {
+    cursor: pointer;
+    background-color:highlightColor;
     color: #FFF;
 }
 

@@ -1,0 +1,10 @@
+.nodeLink {
+	padding:15px;
+	background: #DDD;
+}
+.nodeLinkResponseWrapper {
+	color: #999;
+}
+.nodeLinkResponse {
+	margin: 0 0 5px;
+}

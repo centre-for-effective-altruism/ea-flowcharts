@@ -14,6 +14,16 @@ export const selectLoading = () => createSelector(
     (flowchartState) => flowchartState.get('loading')
 );
 
+export const selectEntries = () => createSelector(
+    selectFlowchartDomain(),
+    (flowchartState) => flowchartState.get('entries')
+);
+
+export const selectPathway = () => createSelector(
+    selectFlowchartDomain(),
+    (flowchartState) => flowchartState.get('pathway').toJS()
+);
+
 export const selectFlowcharts = () => createSelector(
     selectFlowchartDomain(),
     (flowchartState) => flowchartState.get('flowcharts')
@@ -22,16 +32,6 @@ export const selectFlowcharts = () => createSelector(
 export const selectCurrentFlowchart = () => createSelector(
     selectFlowchartDomain(),
     (flowchartState) => flowchartState.get('currentFlowchart')
-);
-
-export const selectCurrentFlowchartNode = () => createSelector(
-    selectFlowchartDomain(),
-    (flowchartState) => flowchartState.get('currentNode')
-);
-
-export const selectPreviousFlowchartNode = () => createSelector(
-    selectFlowchartDomain(),
-    (flowchartState) => flowchartState.get('previousNode')
 );
 
 /**

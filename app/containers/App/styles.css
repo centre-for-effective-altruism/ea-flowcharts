@@ -2,6 +2,12 @@
 @value highlightColor: #00B2BE;
 @value lolightColor:     #1B5266;
 
+.mainContent {
+	margin: 30px 0;
+}
+
+/* Global Styles */
+
 .primaryButton {
     background-color: primaryColor;
     color: #FFF;

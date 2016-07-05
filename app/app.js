@@ -8,7 +8,7 @@ import 'babel-polyfill';
 
 // TODO constrain eslint import/no-unresolved rule to this block
 // Load the favicons file and the netlify _redirects file
-import './images/favicons/favicons.js';    // eslint-disable-line import/no-unresolved
+// import './images/favicons/favicons.js';    // eslint-disable-line import/no-unresolved
 import 'file?name=[name]!./_redirects';    // eslint-disable-line import/no-unresolved
 
 // Import all the third party stuff

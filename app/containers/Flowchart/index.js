@@ -6,21 +6,20 @@
 import React from 'react';
 // state handling
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 import {
    selectLoading,
+   selectEntries,
+   selectPathway,
    selectFlowcharts,
    selectCurrentFlowchart,
-   selectCurrentFlowchartNode,
 } from './selectors';
 import { createStructuredSelector } from 'reselect';
-import { loadFlowcharts, loadFlowchartNode, setCurrentFlowchart } from './actions';
+import { loadEntries, addPathwayStep, clearPathway, truncatePathwayToStep, setCurrentFlowchart } from './actions';
 // components
-import { Grid } from 'react-bootstrap';
-import Header from 'components/Header';
 import Loading from 'components/Loading';
 import FlowchartList from 'components/FlowchartList';
-import FlowchartItem from 'components/FlowchartItem';
+import FlowchartHeader from 'components/FlowchartHeader';
+import FlowchartPathway from 'components/FlowchartPathway';
 import styles from './styles.css';
 import { contentfulObjShape } from 'api/contentful';
 
@@ -28,23 +27,24 @@ import { contentfulObjShape } from 'api/contentful';
 export class Flowchart extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
     static propTypes = {
+        entries: React.PropTypes.oneOfType([
+            React.PropTypes.bool,
+            React.PropTypes.objectOf(React.PropTypes.shape(contentfulObjShape)),
+        ]).isRequired,
         flowcharts: React.PropTypes.oneOfType([
             React.PropTypes.bool,
             React.PropTypes.arrayOf(React.PropTypes.shape(contentfulObjShape)),
-        ]),
+        ]).isRequired,
+        pathway: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
         currentFlowchart: React.PropTypes.oneOfType([
             React.PropTypes.bool,
-            React.PropTypes.shape(contentfulObjShape),
-        ]),
-        currentNode: React.PropTypes.oneOfType([
-            React.PropTypes.bool,
-            React.PropTypes.shape(contentfulObjShape),
-        ]),
-        loading: React.PropTypes.bool,
+            React.PropTypes.string,
+        ]).isRequired,
+        loading: React.PropTypes.bool.isRequired,
         dispatch: React.PropTypes.func,
         params: React.PropTypes.shape({
             flowchartId: React.PropTypes.string,
-            nodeId: React.PropTypes.string,
+            pathway: React.PropTypes.string,
         }),
         // "history",
         // "location",
@@ -52,6 +52,13 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
         // "routeParams",
         // "routes",
         // "children",
+    }
+
+    constructor(props) {
+        super(props);
+        this.addStep = this.addStep.bind(this);
+        this.truncatePathwayToStep = this.truncatePathwayToStep.bind(this);
+        this.clearPathway = this.clearPathway.bind(this);
     }
 
     componentWillMount() {
@@ -69,46 +76,64 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
         }
 
         // if we don't have any flowcharts loaded, we need them, so load them...
-        if (!this.props.flowcharts) {
-            this.props.dispatch(loadFlowcharts());
+        if (!this.props.entries) {
+            this.props.dispatch(loadEntries());
+            return;
         }
 
-        // we've got flowcharts and a flowchart ID but we haven't set one in the State...
-        if (this.props.flowcharts && this.props.params.flowchartId && !this.props.currentFlowchart) {
-            const targetId = this.props.params.flowchartId;
-            const currentFlowchart = this.props.flowcharts.find((flowchart) => flowchart.sys.id === targetId);
-            if (currentFlowchart) {
-                this.props.dispatch(setCurrentFlowchart(currentFlowchart));
-            } else {
-                this.props.dispatch(push('/flowchart'));
-            }
+        // everything is loaded, and we've navigated to a flowchart page, but we haven't set a flowchart ID yet
+        if (!this.props.currentFlowchart && this.props.params.flowchartId) {
+            this.props.dispatch(setCurrentFlowchart(this.props.params.flowchartId));
         }
 
-        // we've got a flowchart set in state, but we don't have a URL var — unset the state var
-        if (!this.props.params.flowchartId && this.props.currentFlowchart) {
+        // we've got a flowchart, so load the first step
+        if (this.props.currentFlowchart && this.props.pathway.length === 0) {
+            this.addStep(this.props.currentFlowchart);
+        }
+
+        // we've got a flowchart set, but our URL doesn't have a param
+        // clear the current flowchart and remove any pathway info
+        if (this.props.currentFlowchart && !this.props.params.flowchartId) {
             this.props.dispatch(setCurrentFlowchart(false));
+            this.clearPathway();
         }
+    }
 
-        // we've got a current flowchart, but no node ID, so use the flowchart ID as the current node
-        if (this.props.currentFlowchart && this.props.params.flowchartId && !this.props.params.nodeId) {
-            this.props.dispatch(push(`/flowchart/${this.props.currentFlowchart.sys.id}/${this.props.currentFlowchart.sys.id}`));
+    addStep(entryId) {
+        this.props.dispatch(addPathwayStep(entryId));
+        // if we're adding a nodeLink, also load the next step
+        if (this.props.entries[entryId].sys.contentType.sys.id === 'nodeLink') {
+            const nextEntry = this.props.entries[entryId].fields.flowchartNode || this.props.entries[entryId].fields.flowchartEndpoint;
+            this.props.dispatch(addPathwayStep(nextEntry.sys.id));
+            return;
         }
+    }
 
-        if (this.props.params.nodeId) {
-            const currentId = this.props.currentNode ? this.props.currentNode.sys.id : false;
-            const newId = this.props.params.nodeId;
-            if (currentId !== newId) {
-                this.props.dispatch(loadFlowchartNode(newId));
-            }
-        }
+    truncatePathwayToStep(entryId) {
+        this.props.dispatch(truncatePathwayToStep(entryId));
+    }
+
+    clearPathway() {
+        this.props.dispatch(clearPathway());
     }
 
     mainContent() {
         if (this.props.loading) {
             return <Loading key={'loading'} />;
         }
-        if (this.props.currentFlowchart && this.props.currentNode) {
-            return <FlowchartItem key={this.props.currentFlowchart.sys.id} {...this.props} />;
+        if (this.props.pathway.length > 0) {
+            return (
+                <div>
+                    <FlowchartHeader clearPathway={this.clearPathway} truncatePathwayToStep={this.truncatePathwayToStep} currentFlowchart={this.props.entries[this.props.currentFlowchart]} />
+                    <FlowchartPathway
+                      addStep={this.addStep}
+                      truncatePathwayToStep={this.truncatePathwayToStep}
+                      entries={this.props.entries}
+                      pathway={this.props.pathway}
+                      currentFlowchart={this.props.currentFlowchart}
+                    />
+                </div>
+            );
         }
         if (this.props.flowcharts) {
             return <FlowchartList key={'flowchart-list'} flowcharts={this.props.flowcharts} />;
@@ -118,13 +143,8 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
 
     render() {
         return (
-            <div>
-                <Header />
-                <Grid>
-                    <div className={styles.flowchart}>
-                        {this.mainContent()}
-                    </div>
-                </Grid>
+            <div className={styles.flowchart}>
+                {this.mainContent()}
             </div>
           );
     }
@@ -138,9 +158,10 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
     loading: selectLoading(),
+    entries: selectEntries(),
     flowcharts: selectFlowcharts(),
+    pathway: selectPathway(),
     currentFlowchart: selectCurrentFlowchart(),
-    currentNode: selectCurrentFlowchartNode(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Flowchart);

@@ -5,16 +5,13 @@
 */
 
 import React from 'react';
-import { Link, browserHistory } from 'react-router';
+import { Link } from 'react-router';
 import { Button, ButtonToolbar, ButtonGroup, OverlayTrigger, Tooltip, Glyphicon } from 'react-bootstrap';
 import styles from './styles.css';
 import { contentfulObjShape } from 'api/contentful';
 
 function FlowchartNavigation(props) {
     let tooltipPlacement = 'bottom';
-    function back() {
-        browserHistory.goBack();
-    }
     function tooltip(message) {
         return <Tooltip id="tooltip">{message}</Tooltip>;
     }
@@ -28,12 +25,12 @@ function FlowchartNavigation(props) {
                 </OverlayTrigger>
                 <ButtonGroup>
                     <OverlayTrigger placement={tooltipPlacement} overlay={tooltip('Start over')}>
-                        <Link to={`/flowchart/${props.currentFlowchart.sys.id}`} className="btn btn-default">
+                        <Button onClick={() => props.clearPathway()} className="btn btn-default">
                             <Glyphicon glyph="fast-backward" />
-                        </Link>
+                        </Button>
                     </OverlayTrigger>
                     <OverlayTrigger placement={tooltipPlacement} overlay={tooltip('Previous step')}>
-                        <Button onClick={back} className="btn btn-default">
+                        <Button onClick={() => props.truncatePathwayToStep()} className="btn btn-default">
                             <Glyphicon glyph="step-backward" />
                         </Button>
                     </OverlayTrigger>
@@ -45,6 +42,7 @@ function FlowchartNavigation(props) {
 
 FlowchartNavigation.propTypes = {
     currentFlowchart: React.PropTypes.shape(contentfulObjShape),
+    truncatePathwayToStep: React.PropTypes.func,
 };
 
 export default FlowchartNavigation;
