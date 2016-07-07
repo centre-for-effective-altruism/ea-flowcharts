@@ -53,7 +53,10 @@ module.exports = (options) => ({
         }, {
             test: /\.(mp4|webm)$/,
             loader: 'url-loader?limit=10000',
-        }],
+        }/*,  {
+            test: require.resolve("dagre-d3"),
+            loader: 'imports?define=>false',
+        }*/],
     },
     plugins: options.plugins.concat([
         new webpack.ProvidePlugin({

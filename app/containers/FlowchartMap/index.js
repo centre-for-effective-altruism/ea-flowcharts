@@ -8,7 +8,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styles from './styles.css';
 import ReactFauxDOM from 'react-faux-dom';
-import SnapLib from 'imports-loader?this=>window,fix=>module.exports=0!snapsvg/dist/snap.svg.js';
+import Snap from 'imports-loader?this=>window,fix=>module.exports=0!snapsvg/dist/snap.svg.js';
 
 
 export class FlowchartMap extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -26,16 +26,16 @@ export class FlowchartMap extends React.Component { // eslint-disable-line react
         this.draw();
     }
 
-    componentDidUpdate() {
-        this.draw();
-    }
+    // componentDidUpdate() {
+    //     this.draw();
+    // }
 
-    componentWillReceiveProps() {
-        this.draw();
-    }
+    // componentWillReceiveProps() {
+    //     this.draw();
+    // }
 
     draw() {
-        const paper = Snap();
+        const paper = Snap(this.wrapper);
 
         const circle = paper.circle(150,150,100);
         circle.attr({
@@ -43,15 +43,16 @@ export class FlowchartMap extends React.Component { // eslint-disable-line react
         });
         const path = paper.path('M150,150l300,300');
         path.attr({
-
+            strokeWidth: 2,
+            stroke: "#333"
         });
         
-        this.wrapper.appendChild(paper);
+        // this.wrapper.appendChild(paper);
     }
 
     render() {
         return (
-            <div className={styles.flowchartMap} ref={(ref) => this.wrapper = ref}></div>
+            <svg className={styles.flowchartMap} ref={(ref) => this.wrapper = ref}></svg>
         );
     }
 }

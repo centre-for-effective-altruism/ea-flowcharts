@@ -14,7 +14,7 @@ import { contentfulObjShape } from 'api/contentful';
 
 function FlowchartStart(props) {
     return (
-        <section className={styles.flowchartStart}>
+        <section className={styles.flowchartStart} id={props.id}>
             <Markdown className={styles.flowchartStartDescription} source={props.node.fields.description} />
             {(() => {
                 if (props.isLastPathwayNode) {

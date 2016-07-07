@@ -14,7 +14,7 @@ import { contentfulObjShape } from 'api/contentful';
 
 function FlowchartEndpoint(props) {
     return (
-        <section className={styles.flowchartEndpoint}>
+        <section className={styles.flowchartEndpoint} id={props.id}>
             <div className={styles.flowchartItemTitleWrapper}>
                 <h3 className={styles.flowchartItemTitle}>
                     <small>You should consider working on:</small><br />

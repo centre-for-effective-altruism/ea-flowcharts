@@ -5,11 +5,22 @@
 */
 
 import React from 'react';
+import Scroll from 'react-scroll';
+const Element = Scroll.Element;
+const scroller = Scroll.scroller;
+
+
+
 
 import FlowchartStart from 'components/FlowchartStart';
 import FlowchartNode from 'components/FlowchartNode';
 import FlowchartEndpoint from 'components/FlowchartEndpoint';
 import NodeLink from 'components/NodeLink';
+import FlowchartLayout from 'components/FlowchartLayout';
+
+import { Row, Col } from 'react-bootstrap';
+
+import styles from './styles.css';
 import { contentfulObjShape } from 'api/contentful';
 
 // import styles from './styles.css';
@@ -24,6 +35,7 @@ export class FlowchartPathway extends React.Component {
 
     getStep(item) {
         const itemProps = {
+            id: item.sys.id,
             currentFlowchart: this.props.currentFlowchart,
             node: item,
             addStep: this.props.addStep,
@@ -51,10 +63,38 @@ export class FlowchartPathway extends React.Component {
         return this.props.pathway.map((step, index) => getStep(props.entries[step], index));
     }
 
+    componentDidUpdate(){
+        // Somewhere else, even another file
+        const el = this.props.pathway.slice(0,this.props.pathway.length).pop();
+        console.log(el)
+        try {
+            scroller.scrollTo(el, {
+              duration: 1200,
+              delay: 30,
+              smooth: true,
+            });
+        } catch(e) {
+            console.log(e)
+            // do nothing
+        }
+    }
+
     render() {
         return (
             <div>
-                {this.getPathway()}
+                <Row className={styles.flowchartMainRow}>
+                    <Col md={6} className={styles.pathwayColumn}>
+                        {this.getPathway()}
+                    </Col>
+                    <Col md={6}  className={styles.flowchartColumn}>
+                        <FlowchartLayout
+                          currentFlowchart={this.props.currentFlowchart}
+                          entries={this.props.entries}
+                          pathway={this.props.pathway}
+                          truncatePathwayToStep={this.props.truncatePathwayToStep}
+                        />
+                    </Col>
+                </Row>
             </div>
         );
     }

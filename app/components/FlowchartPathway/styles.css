@@ -1,5 +1,19 @@
 @value primaryColor, highlightColor, lolightColor from 'containers/App/styles.css';
 
+
+.flowchartMainRow {
+
+}
+.pathwayColumn {
+}
+.flowchartColumn {
+    position: relative;
+}
+
+
+/* generic items */
+
+
 .flowchartItemEnter {
     opacity: 0.01;
 }
@@ -75,3 +89,5 @@
     text-align: center;
     background-color: #EEE;
 }
+
+

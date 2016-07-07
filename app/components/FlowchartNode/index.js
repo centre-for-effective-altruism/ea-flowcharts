@@ -21,7 +21,7 @@ function FlowchartNode(props) {
     c = c >= 3 ? c : 3;
     const classes = [props.isLastPathwayNode ? styles.flowchartItemCurrentNode : styles.flowchartItemPreviousNode].join(' ');
     return (
-        <section className={classes}>
+        <section className={classes} id={props.id}>
             {(() => {
                 if (props.isLastPathwayNode) {
                     return (
