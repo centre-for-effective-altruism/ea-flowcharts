@@ -3,3 +3,15 @@
 .flowchartEndpoint {
     border-bottom: 2px solid primaryColor;
 }
+
+.flowchartEndpointImage {
+	width: 100%;
+}
+
+.giveFeedback {
+	background-color: primaryColor;
+	color: #FFF;
+	font-size: 20px;
+	font-family: "Raleway";
+	padding: 15px;
+}

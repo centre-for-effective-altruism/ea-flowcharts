@@ -17,6 +17,7 @@ import FlowchartNode from 'components/FlowchartNode';
 import FlowchartEndpoint from 'components/FlowchartEndpoint';
 import NodeLink from 'components/NodeLink';
 import FlowchartLayout from 'components/FlowchartLayout';
+import FeedbackModal from 'components/FeedbackModal';
 
 import { Row, Col } from 'react-bootstrap';
 
@@ -40,6 +41,7 @@ export class FlowchartPathway extends React.Component {
             node: item,
             addStep: this.props.addStep,
             truncatePathwayToStep: this.props.truncatePathwayToStep,
+            setShowFeedbackModal: this.props.setShowFeedbackModal,
             isLastPathwayNode: item.sys.id === this.props.pathway[this.props.pathway.length - 1],
         };
 
@@ -66,7 +68,6 @@ export class FlowchartPathway extends React.Component {
     componentDidUpdate(){
         // Somewhere else, even another file
         const el = this.props.pathway.slice(0,this.props.pathway.length).pop();
-        console.log(el)
         try {
             scroller.scrollTo(el, {
               duration: 1200,
@@ -95,6 +96,7 @@ export class FlowchartPathway extends React.Component {
                         />
                     </Col>
                 </Row>
+                <FeedbackModal showFeedbackModal={this.props.showFeedbackModal} setShowFeedbackModal={this.props.setShowFeedbackModal} />
             </div>
         );
     }
@@ -106,6 +108,8 @@ FlowchartPathway.propTypes = {
     entries: React.PropTypes.objectOf(React.PropTypes.shape(contentfulObjShape)).isRequired,
     addStep: React.PropTypes.func.isRequired,
     truncatePathwayToStep: React.PropTypes.func.isRequired,
+    showFeedbackModal: React.PropTypes.bool.isRequired,
+    setShowFeedbackModal: React.PropTypes.func.isRequired,
 };
 
 export default FlowchartPathway;

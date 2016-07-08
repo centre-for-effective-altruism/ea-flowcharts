@@ -19,6 +19,10 @@ export class FlowchartLayout extends React.Component {
     constructor(props){
         super(props);
         this.flowchartNodeClickHandler = this.flowchartNodeClickHandler.bind(this);
+        this.updateDrawing = this.updateDrawing.bind(this);
+        this.setPathway = this.setPathway.bind(this);
+        this.setZoom = this.setZoom.bind(this);
+        this.setFlowchartHeight = this.setFlowchartHeight.bind(this);
     }
 
     static propTypes = {
@@ -40,6 +44,12 @@ export class FlowchartLayout extends React.Component {
 
     componentDidMount(){
         this.draw();
+        window.addEventListener('resize', this.setFlowchartHeight)
+    }
+
+    componentWillUnmount(){
+        this.draw();
+        window.removeEventListener('resize', this.setFlowchartHeight)
     }
 
     getChildren(entryId, depth = 0) {
@@ -121,11 +131,12 @@ export class FlowchartLayout extends React.Component {
 
     draw(){
         const getEntry = this.getEntry.bind(this)
+        
 
         const clickHandler = this.flowchartNodeClickHandler;
 
-        var width = 300,
-            height = 400;
+        var width = "100%",
+            height = 530;
 
         // Create the input graph
         var g = new dagreD3.graphlib.Graph()
@@ -174,97 +185,127 @@ export class FlowchartLayout extends React.Component {
 
 
         // // Set up an SVG group so that we can translate the final graph.
-        var svg = d3.select(this.flowchart)
+        const flowchart = d3.select(this.flowchart)
             // svg = chart.append('svg')
             .attr('width',width)
             .attr('height',height)
             .attr('class',styles.chart),
-            svgGroup = svg.append("g").attr('id','flowchart');
+            flowchartBody = flowchart.append("g").attr('id','flowchart');
 
-        render(svgGroup, g);
+        render(flowchartBody, g);
         // Center the graph
 
-        svg.attr("width", g.graph().width+40);
-        svg.attr("height", g.graph().height+40);
-        svgGroup.attr("transform", 'translate(20,20)');
+        flowchart.attr("width", g.graph().width+40);
+        flowchart.attr("height", g.graph().height+40);
+        flowchartBody.attr("transform", 'translate(20,20)');
 
-        d3.select(this.flowchartWrapper)
-        .attr("width", "100%")
-        .attr("height", 600)
-        .attr('viewBox',`0 0 ${svg.attr("width")} ${svg.attr("height")}`)
-
+        const flowchartWrapper = d3.select(this.flowchartWrapper)
+        .attr("width", width)
+        .attr("height", height)
+        .attr('viewBox',`0 0 ${flowchart.attr("width")} ${flowchart.attr("height")}`)
         // apply styles and click handlers
-        svgGroup.selectAll('.node')
+        flowchartBody.selectAll('.node')
           .classed(styles.node,true)
           .on('click', clickHandler);
-        svgGroup.selectAll('.edgePath')
+        flowchartBody.selectAll('.edgePath')
           .classed(styles.edgePath,true);
+
+          this.setZoom(2)
+
+        // zoom buttons
+        const buttonSize = 80;
+        const buttonSpacing = 20;
+        const zoomIn = flowchartWrapper.append('g')
+          .attr('transform', `translate(${buttonSpacing}, ${buttonSpacing})`)
+          .attr('class',styles.zoomButton)
+        const zoomOut = flowchartWrapper.append('g')
+          .attr('transform', `translate(${buttonSize + buttonSpacing * 2}, ${ buttonSpacing })`)
+          .attr('class',styles.zoomButton)
+
+        const buttons = d3.selectAll(`.${styles.zoomButton}`);
+        buttons.append('rect')
+          .attr('width', buttonSize)
+          .attr('height', buttonSize)
+          .attr('rx', 10)
+          .attr('ry', 10)
+
+        buttons.append('text')
+          .attr('transform',`translate(${buttonSpacing},0)`)
+          .attr('dy','1em')
+
+
+        zoomIn
+          .on('click',function(){zoom('in')})
+          .select('text').text('+')
         
+        zoomOut
+          .on('click',function(){zoom('out')})
+          .select('text').text('-')
+
+        const setZoom = this.setZoom;
+        function zoom(direction) {
+            let zoomCoefficient = 1;
+            if(direction === 'out'){
+                zoomCoefficient *= -1;
+            }
+            let scaleFactor = d3.transform(flowchartBody.attr('transform')).scale[0];
+                scaleFactor += parseFloat(zoomCoefficient,10);
+            console.log(direction,zoomCoefficient, scaleFactor)
+            setZoom(scaleFactor);
+        }
     }
 
     updateDrawing() {
+        this.setPathway();
+        this.setFlowchartHeight();
+        this.setZoom();
+    }
+
+    setFlowchartHeight() {
         const flowchart = d3.select(this.flowchart);
         const flowchartWrapper = d3.select(this.flowchartWrapper);
+        const flowchartBBox = flowchart.node().getBBox();
+        const aspectRatio = flowchartBBox.height/ flowchartBBox.width;
+        const flowchartWrapperWidth = flowchartWrapper.node().getBoundingClientRect().width;
+        flowchartWrapper.attr('height',flowchartWrapperWidth * aspectRatio);
+        
+    }
+
+    setPathway() {
+        const flowchart = d3.select(this.flowchart);
+        const flowchartWrapper = d3.select(this.flowchartWrapper);
+        const flowchartBody = flowchart.select('#flowchart');
 
         // ensure items in the pathway are marked as selected
         const nodes = flowchart.selectAll(`.${styles.node}`).classed(styles.inPathway,false);
         this.props.pathway.forEach(function(entryId){
             let p = flowchart.select(`#id_${entryId}`).classed(styles.inPathway,true);
         });
+    }
 
-        
+    setZoom(scaleFactor = false) {
+        const flowchart = d3.select(this.flowchart);
+        const flowchartWrapper = d3.select(this.flowchartWrapper);
         const flowchartBody = flowchart.select('#flowchart');
         const currentFlowchartNode = flowchart.select(`#id_${this.props.pathway.slice(0,this.props.pathway.length).pop()}`);
         
-
-        // const flowchartWrapperHeight = 400;
-        // const flowchartWrapperWidth = 585;
-        // const flowchartWidth = flowchart.attr('width');
-        // const flowchartHeight = flowchart.attr('height');
+        const flowchartBodyTransform = d3.transform(flowchartBody.attr('transform'));
+        const nodeTransform = d3.transform(currentFlowchartNode.attr('transform'));
+        scaleFactor = scaleFactor || flowchartBodyTransform.scale[0] || 1;
+        var flowchartBBox = flowchartBody.node().getBBox();
         
-
-        // const currentNodeBBox = currentFlowchartNode.node().getBBox();
-        // const flowchartClientRect = flowchartBody.node().getBoundingClientRect();
-        // const flowchartBBox = flowchartBody.node().getBBox();
-        // const flowchartCTM = flowchart.node().getScreenCTM();
-
-        // console.log('flowchartClientRect',flowchartClientRect);
-        // console.log('flowchartBBox',flowchartBBox);
-        // console.log('currentNodeBBox',currentNodeBBox);
-        // console.log('flowchartCTM',flowchartCTM);
+        // set bounds on the scaling factor
+        if(scaleFactor > 4) scaleFactor = 4;
+        if(scaleFactor < 0.8) scaleFactor = 0.8;
+        
+        let centerOnCurrentNode = [
+            -1 * (nodeTransform.translate[0]-(flowchartBBox.width/(2*scaleFactor))),
+            -1 * (nodeTransform.translate[1]-(flowchartBBox.height/(2*scaleFactor)))
+        ];
 
 
-        // function convertCoords(x,y,scale = 1,elem) {
-            
-
-        //     var offset = flowchartBody.node().getBoundingClientRect();
-
-        //     var matrix = elem.node().getScreenCTM();
-
-        //     console.log('offset',offset);
-        //     console.log('offsetE',flowchartBody);
-        //     console.log('matrix',matrix);
-        //     console.log('matrixE',elem);
-
-        //     return {
-        //         x: 1/scale * (matrix.a * x) + (matrix.c * y) + matrix.e - offset.left,
-        //         y: 1/scale * (matrix.b * x) + (matrix.d * y) + matrix.f - offset.top
-        //     };
-        // }
-
-        // var bbox = currentFlowchartNode.node().getBBox(),
-        // middleX = bbox.x + (bbox.width / 2),
-        // middleY = bbox.y + (bbox.height / 2);
-
-        // const scaleFactor = 0.8;
-        // const coords = convertCoords(middleX,middleY,scaleFactor,currentFlowchartNode);
-        // d3.select('#test').remove();
-        // flowchartBody.append('rect').attr('id','test').attr('width',6).attr('height',6).attr('x',coords.x).attr('y',coords.y)
-
-        // const center = [0,0];
-
-        // flowchartBody.attr('transform',`translate(0,0) scale(${scaleFactor}) translate(${center})`);
-
+        flowchartBody.transition()
+          .duration(750).attr('transform',`scale(${scaleFactor}) translate(${centerOnCurrentNode})`)
     }
 
     render(){

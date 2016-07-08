@@ -1,0 +1,13 @@
+.feedbackModal {
+
+}
+@media(min-width: 992px){
+	.feedbackModalDialog {
+		width: 900px;
+	}
+}
+.feedbackModalIFrame{
+	width: 100%;
+	max-width: 100%;
+	height: 400px;
+}

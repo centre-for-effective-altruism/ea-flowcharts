@@ -11,8 +11,23 @@
 @media( min-width: 992px ){
 	.flowchartWrapper {
 		position: fixed;
-		width: 585px;
+		width: 455px;
 	}
+}
+
+@media( min-width: 1200px ){
+	.flowchartWrapper {
+		position: fixed;
+		width: 555px;
+	}
+}
+
+.zoomButton rect {
+	fill: lolightColor;
+}
+.zoomButton text {
+	color: #FFF;
+	font-size: 60px;
 }
 
 .chart text {

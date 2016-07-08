@@ -11,6 +11,7 @@ import {
   TRUNCATE_PATHWAY_TO_STEP,
   SET_CURRENT_FLOWCHART,
   LOADING_ERROR,
+  SET_SHOW_FEEDBACK_MODAL,
 } from './constants';
 
 
@@ -60,5 +61,12 @@ export function loadingError(errors) {
     return {
         type: LOADING_ERROR,
         errors,
+    };
+}
+
+export function setShowFeedbackModal(show) {
+    return {
+        type: SET_SHOW_FEEDBACK_MODAL,
+        show,
     };
 }

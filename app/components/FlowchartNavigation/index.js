@@ -18,6 +18,11 @@ function FlowchartNavigation(props) {
     return (
         <div className={styles.flowchartNavigation}>
             <ButtonToolbar className={styles.flowchartNavigationToolbar}>
+                <OverlayTrigger placement={tooltipPlacement} overlay={tooltip('Give Feedback')}>
+                    <Button onClick={() => props.setShowFeedbackModal(true)} className={`btn btn-success ${styles.flowchartNavigationFeedbackButton}`}>
+                        <Glyphicon glyph="bullhorn" />
+                    </Button>
+                </OverlayTrigger>
                 <OverlayTrigger placement={tooltipPlacement} overlay={tooltip('View all flowcharts')}>
                     <Link to="/flowchart" className={`btn btn-default ${styles.flowchartNavigationHomeButton}`}>
                         <Glyphicon glyph="home" />
@@ -43,6 +48,8 @@ function FlowchartNavigation(props) {
 FlowchartNavigation.propTypes = {
     currentFlowchart: React.PropTypes.shape(contentfulObjShape),
     truncatePathwayToStep: React.PropTypes.func,
+    showFeedbackModal: React.PropTypes.bool,
+    setShowFeedbackModal: React.PropTypes.func,
 };
 
 export default FlowchartNavigation;

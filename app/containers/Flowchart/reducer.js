@@ -12,6 +12,7 @@ import {
   TRUNCATE_PATHWAY_TO_STEP,
   SET_CURRENT_FLOWCHART,
   LOADING_ERROR,
+  SET_SHOW_FEEDBACK_MODAL,
 } from './constants';
 
 const initialState = fromJS({
@@ -20,6 +21,7 @@ const initialState = fromJS({
     flowcharts: false,
     currentFlowchart: false,
     pathway: [],
+    showFeedbackModal: false,
 });
 
 function flowchartReducer(state = initialState, action) {
@@ -74,6 +76,10 @@ function flowchartReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', action.error)
         .set('flowcharts', false);
+    }
+    case SET_SHOW_FEEDBACK_MODAL: {
+        return state
+        .set('showFeedbackModal', action.show);
     }
     default: {
         return state;

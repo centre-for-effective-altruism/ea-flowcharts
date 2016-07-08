@@ -12,9 +12,17 @@ import {
    selectPathway,
    selectFlowcharts,
    selectCurrentFlowchart,
+   selectShowFeedbackModal,
 } from './selectors';
 import { createStructuredSelector } from 'reselect';
-import { loadEntries, addPathwayStep, clearPathway, truncatePathwayToStep, setCurrentFlowchart } from './actions';
+import { 
+    loadEntries, 
+    addPathwayStep, 
+    clearPathway, 
+    truncatePathwayToStep, 
+    setCurrentFlowchart,
+    setShowFeedbackModal,
+} from './actions';
 // components
 import Loading from 'components/Loading';
 import FlowchartList from 'components/FlowchartList';
@@ -41,6 +49,7 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
             React.PropTypes.string,
         ]).isRequired,
         loading: React.PropTypes.bool.isRequired,
+        showFeedbackModal: React.PropTypes.bool.isRequired,
         dispatch: React.PropTypes.func,
         params: React.PropTypes.shape({
             flowchartId: React.PropTypes.string,
@@ -59,6 +68,7 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
         this.addStep = this.addStep.bind(this);
         this.truncatePathwayToStep = this.truncatePathwayToStep.bind(this);
         this.clearPathway = this.clearPathway.bind(this);
+        this.setShowFeedbackModal = this.setShowFeedbackModal.bind(this);
     }
 
     componentWillMount() {
@@ -117,6 +127,11 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
         this.props.dispatch(clearPathway());
     }
 
+    setShowFeedbackModal(show) {
+        if (typeof show === 'undefined') show = !this.props.showFeedbackModal;
+        this.props.dispatch(setShowFeedbackModal(show))
+    }
+
     mainContent() {
         if (this.props.loading) {
             return <Loading key={'loading'} />;
@@ -124,13 +139,21 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
         if (this.props.pathway.length > 0) {
             return (
                 <div>
-                    <FlowchartHeader clearPathway={this.clearPathway} truncatePathwayToStep={this.truncatePathwayToStep} currentFlowchart={this.props.entries[this.props.currentFlowchart]} />
+                    <FlowchartHeader 
+                      clearPathway={this.clearPathway}
+                      truncatePathwayToStep={this.truncatePathwayToStep}
+                      currentFlowchart={this.props.entries[this.props.currentFlowchart]}
+                      setShowFeedbackModal={this.setShowFeedbackModal}
+                      showFeedbackModal={this.props.showFeedbackModal}
+                    />
                     <FlowchartPathway
                       addStep={this.addStep}
                       truncatePathwayToStep={this.truncatePathwayToStep}
                       entries={this.props.entries}
                       pathway={this.props.pathway}
                       currentFlowchart={this.props.currentFlowchart}
+                      setShowFeedbackModal={this.setShowFeedbackModal}
+                      showFeedbackModal={this.props.showFeedbackModal}
                     />
                 </div>
             );
@@ -162,6 +185,7 @@ const mapStateToProps = createStructuredSelector({
     flowcharts: selectFlowcharts(),
     pathway: selectPathway(),
     currentFlowchart: selectCurrentFlowchart(),
+    showFeedbackModal: selectShowFeedbackModal(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Flowchart);
