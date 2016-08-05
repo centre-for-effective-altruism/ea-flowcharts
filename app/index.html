@@ -1,14 +1,21 @@
 <!doctype html>
-<html lang="en">
+<html lang='en'>
 <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>Effective Altruism Flowcharts</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,700,700i|Raleway:400,400i,700,700i" rel="stylesheet">
+
+    <script>
+        if (document.location.pathname.split('/')[2] === 'embed') {
+            var b = document.createElement('base');
+            b.target = '_top';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(b, s);
+        }
+    </script>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:300,300i,700,700i|Raleway:400,400i,700,700i' rel='stylesheet'>
     <style>
         body {
             font-family: 'Merriweather',serif;
@@ -18,10 +25,18 @@
             font-weight: 700;
         }
     </style>
+    <script>
+        // segment tracking code
+        !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error('Segment snippet included twice.');else{analytics.invoked=!0;analytics.methods=['trackSubmit','trackClick','trackLink','trackForm','pageview','identify','reset','group','track','ready','alias','page','once','off','on'];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement('script');e.type='text/javascript';e.async=!0;e.src=('https:'===document.location.protocol?'https://':'http://')+'cdn.segment.com/analytics.js/v1/'+t+'/analytics.min.js';var n=document.getElementsByTagName('script')[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION='3.1.0';
+        // load the script
+        analytics.load('N0YgW5S7kgpUX6Ba2yVJvmjLcNlzIOOr');
+        analytics.page('Flowchart');
+        }}();
+    </script>
 </head>
 <body>
 <!-- The app hooks into this div -->
-<div id="app"></div>
+<div id='app'></div>
 <!-- A lot of magic happens in this file. HtmlWebpackPlugin automatically includes all assets (e.g. bundle.js, main.css) with the correct HTML tags, which is why they are missing in this HTML file. Don't add any assets here! (Check out webpackconfig.js if you want to know more) -->
 </body>
 </html>

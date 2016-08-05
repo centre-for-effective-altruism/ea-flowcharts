@@ -142,6 +142,7 @@
     "express": "^4.13.4",
     "fontfaceobserver": "^1.7.1",
     "history": "^2.1.0",
+    "iframe-resizer": "^3.5.5",
     "immutable": "^3.8.1",
     "ip": "^1.1.2",
     "markdown-it-jsx": "^1.0.0",

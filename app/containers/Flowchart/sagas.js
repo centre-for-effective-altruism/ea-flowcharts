@@ -15,12 +15,23 @@ import contentful from 'api/contentful';
 export function* getEntries() {
     const entries = yield contentful.getEntries({
         limit: 1000,
+        include: 1
     });
     if (entries.errors) {
-        yield put(loadingError(entries.errors));
-    } else {
-        yield put(loadedEntries(entries.items));
+        const badErrors = [];
+        entries.errors.forEach(function(error){
+            if(error.sys.id === 'notResolvable'){
+                console.warn(`Warning: asset ${error.details.id} could not be resolved`);
+            } else {
+                badErrors.push(error);
+            }
+        })
+        if(badErrors.length > 0){
+            yield put(loadingError(badErrors));
+            return;
+        }
     }
+    yield put(loadedEntries(entries.items));
 }
 
 // Watch

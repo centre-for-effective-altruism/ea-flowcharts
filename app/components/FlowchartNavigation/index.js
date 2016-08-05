@@ -11,6 +11,7 @@ import styles from './styles.css';
 import { contentfulObjShape } from 'api/contentful';
 
 function FlowchartNavigation(props) {
+
     let tooltipPlacement = 'bottom';
     function tooltip(message) {
         return <Tooltip id="tooltip">{message}</Tooltip>;
@@ -23,11 +24,18 @@ function FlowchartNavigation(props) {
                         <Glyphicon glyph="bullhorn" />
                     </Button>
                 </OverlayTrigger>
-                <OverlayTrigger placement={tooltipPlacement} overlay={tooltip('View all flowcharts')}>
-                    <Link to="/flowchart" className={`btn btn-default ${styles.flowchartNavigationHomeButton}`}>
-                        <Glyphicon glyph="home" />
-                    </Link>
-                </OverlayTrigger>
+                {((embed) => {
+                    if (!embed) {
+                        return (
+                            <OverlayTrigger placement={tooltipPlacement} overlay={tooltip('View all flowcharts')}>
+                                <Link to="/flowchart" className={`btn btn-default ${styles.flowchartNavigationHomeButton}`}>
+                                    <Glyphicon glyph="home" />
+                                </Link>
+                            </OverlayTrigger>
+                        );
+                    }
+                    return false;
+                })(props.embed)}
                 <ButtonGroup>
                     <OverlayTrigger placement={tooltipPlacement} overlay={tooltip('Start over')}>
                         <Button onClick={() => props.clearPathway()} className="btn btn-default">

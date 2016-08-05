@@ -10,16 +10,17 @@ import {
    selectLoading,
    selectEntries,
    selectPathway,
+   selectError,
    selectFlowcharts,
    selectCurrentFlowchart,
    selectShowFeedbackModal,
 } from './selectors';
 import { createStructuredSelector } from 'reselect';
-import { 
-    loadEntries, 
-    addPathwayStep, 
-    clearPathway, 
-    truncatePathwayToStep, 
+import {
+    loadEntries,
+    addPathwayStep,
+    clearPathway,
+    truncatePathwayToStep,
     setCurrentFlowchart,
     setShowFeedbackModal,
 } from './actions';
@@ -49,15 +50,19 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
             React.PropTypes.string,
         ]).isRequired,
         loading: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.oneOfType([
+            React.PropTypes.bool,
+            React.PropTypes.array,
+        ]).isRequired,
         showFeedbackModal: React.PropTypes.bool.isRequired,
         dispatch: React.PropTypes.func,
         params: React.PropTypes.shape({
             flowchartId: React.PropTypes.string,
             pathway: React.PropTypes.string,
         }),
+        "route": React.PropTypes.object,
         // "history",
         // "location",
-        // "route",
         // "routeParams",
         // "routes",
         // "children",
@@ -69,6 +74,7 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
         this.truncatePathwayToStep = this.truncatePathwayToStep.bind(this);
         this.clearPathway = this.clearPathway.bind(this);
         this.setShowFeedbackModal = this.setShowFeedbackModal.bind(this);
+        this.embed = props.route.name === 'embedFlowchart';
     }
 
     componentWillMount() {
@@ -84,13 +90,11 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
         if (this.props.loading) {
             return;
         }
-
         // if we don't have any flowcharts loaded, we need them, so load them...
-        if (!this.props.entries) {
+        if (!this.props.entries && !this.props.error) {
             this.props.dispatch(loadEntries());
             return;
         }
-
         // everything is loaded, and we've navigated to a flowchart page, but we haven't set a flowchart ID yet
         if (!this.props.currentFlowchart && this.props.params.flowchartId) {
             this.props.dispatch(setCurrentFlowchart(this.props.params.flowchartId));
@@ -129,7 +133,7 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
 
     setShowFeedbackModal(show) {
         if (typeof show === 'undefined') show = !this.props.showFeedbackModal;
-        this.props.dispatch(setShowFeedbackModal(show))
+        this.props.dispatch(setShowFeedbackModal(show));
     }
 
     mainContent() {
@@ -139,12 +143,13 @@ export class Flowchart extends React.Component { // eslint-disable-line react/pr
         if (this.props.pathway.length > 0) {
             return (
                 <div>
-                    <FlowchartHeader 
+                    <FlowchartHeader
                       clearPathway={this.clearPathway}
                       truncatePathwayToStep={this.truncatePathwayToStep}
                       currentFlowchart={this.props.entries[this.props.currentFlowchart]}
                       setShowFeedbackModal={this.setShowFeedbackModal}
                       showFeedbackModal={this.props.showFeedbackModal}
+                      embed={this.embed}
                     />
                     <FlowchartPathway
                       addStep={this.addStep}
@@ -184,6 +189,7 @@ const mapStateToProps = createStructuredSelector({
     entries: selectEntries(),
     flowcharts: selectFlowcharts(),
     pathway: selectPathway(),
+    error: selectError(),
     currentFlowchart: selectCurrentFlowchart(),
     showFeedbackModal: selectShowFeedbackModal(),
 });

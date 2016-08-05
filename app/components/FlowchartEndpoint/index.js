@@ -25,15 +25,16 @@ function FlowchartEndpoint(props) {
             </div>
             <div>
             {(() => {
-                if(image){
-                    return <img className={ `img-responsive ${styles.flowchartEndpointImage}`} src={`https://${image.fields.file.url}`} />
-                } 
+                if (image && image.fields && image.fields.file) {
+                    return <img alt={image.fields.description || image.fields.title} className={`img-responsive ${styles.flowchartEndpointImage}`} src={`https:${image.fields.file.url}?w=750`} />;
+                }
+                return false;
             })()}
             </div>
             <div className={styles.flowchartItemExplanation}>
                 <Markdown source={props.node.fields.explanation} />
                 {(() => {
-                    if (typeof props.node.fields.nextSteps === 'string' && props.node.fields.nextSteps.length>0){
+                    if (typeof props.node.fields.nextSteps === 'string' && props.node.fields.nextSteps.length > 0) {
                         return (
                             <div>
                                 <hr />
@@ -42,6 +43,7 @@ function FlowchartEndpoint(props) {
                             </div>
                         );
                     }
+                    return false;
                 })()}
             </div>
             <div className={styles.giveFeedback}>

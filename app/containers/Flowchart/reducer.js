@@ -19,6 +19,7 @@ const initialState = fromJS({
     loading: false,
     entries: false,
     flowcharts: false,
+    error: false,
     currentFlowchart: false,
     pathway: [],
     showFeedbackModal: false,
@@ -74,7 +75,7 @@ function flowchartReducer(state = initialState, action) {
     case LOADING_ERROR: {
         return state
         .set('loading', false)
-        .set('error', action.error)
+        .set('error', action.errors)
         .set('flowcharts', false);
     }
     case SET_SHOW_FEEDBACK_MODAL: {

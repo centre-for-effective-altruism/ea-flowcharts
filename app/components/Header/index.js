@@ -7,7 +7,7 @@
 import React from 'react';
 import LogoLightbulb from 'images/logos/ea-logo-lightbulb.svg';
 import LogoText from 'images/logos/ea-logo-text.svg';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col, Button } from 'react-bootstrap';
 
 import styles from './styles.css';
 
@@ -30,9 +30,9 @@ function Header() {
                             </Col>
                         </Row>
                     </Col>
-                    <Col md={6}>
+                    <Col xs={12} md={6}>
                         <div className={styles.headerContent}>
-                            <h1 className={styles.headerTitle}>Flowcharts</h1>
+                            <h1 className={styles.headerTitle}>Flowcharts <small>Beta</small></h1>
                         </div>
                     </Col>
                 </Row>

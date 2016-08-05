@@ -16,39 +16,39 @@ export default function createRoutes(store) {
     // Create reusable async injectors using getHooks factory
     const { injectReducer, injectSagas } = getHooks(store);
 
+    const flowchartGetComponent = function getComponent(nextState, cb) {
+        const importModules = Promise.all([
+            System.import('containers/Flowchart/reducer'),
+            System.import('containers/Flowchart/sagas'),
+            System.import('containers/Flowchart'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+            injectReducer('flowchart', reducer.default);
+            injectSagas(sagas.default);
+            renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+    };
+
+
     return [
         {
             path: '/',
             indexRoute: { onEnter: (nextState, replace) => replace('/flowchart') },
         },
         {
-            path: '/flowchart(/:flowchartId)(/:pathway)',
-            name: 'flowchart',
-            getComponent(nextState, cb) {
-                const importModules = Promise.all([
-                    System.import('containers/Flowchart/reducer'),
-                    System.import('containers/Flowchart/sagas'),
-                    System.import('containers/Flowchart'),
-                ]);
-
-                const renderRoute = loadModule(cb);
-
-                importModules.then(([reducer, sagas, component]) => {
-                    injectReducer('flowchart', reducer.default);
-                    injectSagas(sagas.default);
-                    renderRoute(component);
-                });
-
-                importModules.catch(errorLoading);
-            },
+            path: '/flowchart/embed(/:flowchartId)(/:pathway)',
+            name: 'embedFlowchart',
+            getComponent: flowchartGetComponent,
         },
         {
-            path: '/map',
-            getComponent(location, cb) {
-                System.import('containers/FlowchartMap')
-                    .then(loadModule(cb))
-                    .catch(errorLoading);
-            },
+            path: '/flowchart(/:flowchartId)(/:pathway)',
+            name: 'flowchart',
+            getComponent: flowchartGetComponent,
         },
         {
             path: '*',

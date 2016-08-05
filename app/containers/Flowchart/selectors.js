@@ -38,6 +38,10 @@ export const selectShowFeedbackModal = () => createSelector(
     selectFlowchartDomain(),
     (flowchartState) => flowchartState.get('showFeedbackModal')
 );
+export const selectError = () => createSelector(
+    selectFlowchartDomain(),
+    (flowchartState) => flowchartState.get('error')
+);
 
 /**
  * Default selector used by Flowchart

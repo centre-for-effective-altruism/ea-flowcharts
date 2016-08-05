@@ -21,12 +21,23 @@ export default class App extends React.Component { // eslint-disable-line react/
 
     static propTypes = {
         children: React.PropTypes.node,
+        routes: React.PropTypes.array,
     };
+
+    constructor(props) {
+        super(props);
+        this.embed = props.routes[props.routes.length-1].name === 'embedFlowchart';
+    }
 
     render() {
         return (
             <div>
-                <Header />
+                {((embed) => {
+                    if (!embed) {
+                        return <Header />;
+                    }
+                    return false;
+                })(this.embed)}
                 <Grid>
                     <div className={styles.mainContent}>
                         {this.props.children}

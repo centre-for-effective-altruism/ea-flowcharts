@@ -30,7 +30,7 @@ function FlowchartNode(props) {
                                 <h3 className={styles.flowchartItemTitle}>Q: {node.fields.question}</h3>
                             </div>
                             <div>
-                                <Markdown className={styles.flowchartItemExplanation} source={node.fields.explanation} />
+                                <Markdown className={styles.flowchartItemExplanation} source={node.fields.explanation || ''} />
                                 <Row>
                                 {node.fields.nodeLinks.map(nodeLink => (
                                     <Col key={nodeLink.sys.id} sm={c}>

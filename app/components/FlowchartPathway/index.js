@@ -29,9 +29,23 @@ import { contentfulObjShape } from 'api/contentful';
 export class FlowchartPathway extends React.Component {
     constructor(props) {
         super(props);
-
         this.getStep = this.getStep.bind(this);
         this.getPathway = this.getPathway.bind(this);
+    }
+
+    componentDidUpdate() {
+        // Somewhere else, even another file
+        const el = this.props.pathway.slice(0, this.props.pathway.length).pop();
+        try {
+            scroller.scrollTo(el, {
+                duration: 1200,
+                delay: 30,
+                smooth: true,
+            });
+        } catch (e) {
+            console.log(e);
+            // do nothing
+        }
     }
 
     getStep(item) {
@@ -45,12 +59,28 @@ export class FlowchartPathway extends React.Component {
             isLastPathwayNode: item.sys.id === this.props.pathway[this.props.pathway.length - 1],
         };
 
+
         switch (item.sys.contentType.sys.id) {
         case 'flowchart':
+            if (itemProps.isLastPathwayNode) {
+                window.analytics.track('Started Flowchart', {
+                    label: item.fields.title,
+                });
+            }
             return <FlowchartStart key={item.sys.id} {...itemProps} />;
         case 'flowchartNode':
+            if (itemProps.isLastPathwayNode) {
+                window.analytics.track('Reached Flowchart Node', {
+                    label: item.fields.question,
+                });
+            }
             return <FlowchartNode key={item.sys.id} {...itemProps} />;
         case 'flowchartEndpoint':
+            if (itemProps.isLastPathwayNode) {
+                window.analytics.track('Reached Flowchart Endpoint', {
+                    label: item.fields.title,
+                });
+            }
             return <FlowchartEndpoint key={item.sys.id} {...itemProps} />;
         case 'nodeLink':
             return <NodeLink key={item.sys.id} {...itemProps} />;
@@ -63,21 +93,6 @@ export class FlowchartPathway extends React.Component {
         const getStep = this.getStep;
         const props = this.props;
         return this.props.pathway.map((step, index) => getStep(props.entries[step], index));
-    }
-
-    componentDidUpdate(){
-        // Somewhere else, even another file
-        const el = this.props.pathway.slice(0,this.props.pathway.length).pop();
-        try {
-            scroller.scrollTo(el, {
-              duration: 1200,
-              delay: 30,
-              smooth: true,
-            });
-        } catch(e) {
-            console.log(e)
-            // do nothing
-        }
     }
 
     render() {
